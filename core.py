@@ -1,6 +1,6 @@
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from huggingface_hub import login
@@ -19,15 +19,22 @@ def load_environment_variables():
     if hf_token is None:
         raise ValueError("HF_TOKEN is not set in the environment variables.")
     
-    deepseek_api_key = os.getenv("DEEPSEEK_API_KEY")
-    if deepseek_api_key is None:
-        raise ValueError("DEEPSEEK_API_KEY is not set in the environment variables.")
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    if openai_api_key is None:
+        raise ValueError("OPENAI_API_KEY is not set in the environment variables.")
     
-    deepseek_api_base = os.getenv("DEEPSEEK_API_BASE")
-    if deepseek_api_base is None:
-        raise ValueError("DEEPSEEK_API_BASE is not set in the environment variables.")
+    openai_api_base = os.getenv("OPENAI_API_KEY")
+    if openai_api_base is None:
+        raise ValueError("OPENAI_API_KEY is not set in the environment variables.")
     
-    return hf_token, deepseek_api_key, deepseek_api_base
+    model_name = os.getenv("MODEL_NAME")
+    if model_name is None:
+        raise ValueError("MODEL_NAME is not set in the environment variables.")
+    
+    if model_name not in ["gpt-3.5-turbo", "gpt-4"]:
+        raise ValueError("MODEL_NAME must be either 'gpt-3.5-turbo' or 'gpt-4'.")
+    
+    return hf_token, openai_api_key, openai_api_base, model_name
 
 def authenticate_huggingface(token):
     """Login to HuggingFace."""
@@ -43,21 +50,20 @@ def load_and_split_documents(pdf_path, chunk_size=10000, chunk_overlap=200):
     
     return chunks
 
-def create_vector_store(chunks):
+def create_vector_store(chunks, model_name, api_key=None):
     """Create embeddings and vector store."""
-    embeddings = HuggingFaceEmbeddings(
-        model_name="all-MiniLM-L6-v2",
-        model_kwargs={"device": "cpu"},
-        encode_kwargs={"normalize_embeddings": True}
+    embeddings = OpenAIEmbeddings(
+        model=model_name,
+        openai_api_key=api_key,
     )
     vectorstore = FAISS.from_documents(chunks, embeddings)
     
     return vectorstore
 
-def get_deepseek_llm(api_key, api_base, temperature=1.3, max_tokens=500):
+def get_openai_llm(model_name, api_key, api_base, temperature=1.3, max_tokens=500):
     """Configure the DeepSeek LLM."""
     return ChatOpenAI(
-        model="deepseek-chat",
+        model=model_name,
         openai_api_key=api_key,
         openai_api_base=api_base,
         temperature=temperature,
@@ -75,7 +81,8 @@ def ask_question(qa_chain, query):
 def pipeline(filename="data/B-SVR-500_project.pdf", user_query="What is the goal of the project in two-three small sentences"):
     """Main function to run the entire pipeline."""
     # Step 1: Load environment variables
-    hf_token, deepseek_api_key, deepseek_api_base = load_environment_variables()
+    hf_token, openai_api_key, openai_api_base, model_name = load_environment_variables()
+    embedding_model = "text-embedding-3-small"
     
     # Step 2: Authenticate with HuggingFace
     authenticate_huggingface(hf_token)
@@ -84,10 +91,10 @@ def pipeline(filename="data/B-SVR-500_project.pdf", user_query="What is the goal
     chunks = load_and_split_documents(filename)
     
     # Step 4: Create vector store
-    vectorstore = create_vector_store(chunks)
+    vectorstore = create_vector_store(chunks, embedding_model, openai_api_key)
     
     # Step 5: Set up the LLM
-    llm = get_deepseek_llm(deepseek_api_key, deepseek_api_base)
+    llm = get_openai_llm(model_name, openai_api_key, openai_api_base)
     
     # Step 6: Create QA chain
     qa_chain = create_qa_chain(llm, vectorstore)
