@@ -78,7 +78,8 @@ The project consists of three main components:
 - HuggingFace account and API token
 - DeepSeek API key (or compatible LLM API)
 
-> [!NOTE]: If you need help setting up Python, VS Code, and the uv package manager, please refer to our [Setup Guide](SETUP.md) for detailed instructions.
+> [!NOTE]: If you need help setting up Python, VS Code, and the uv package manager,
+> please refer to our [Setup Guide](SETUP.md) for detailed instructions.
 
 ### Installation
 
