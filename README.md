@@ -123,7 +123,7 @@ streamlit run streamlit_app.py
 
 ## Workshop Content
 
-The colab notebook.ipynb) walks through:
+The colab notebook.ipynb walks through:
 
 1. Environment setup and dependency installation
 2. Data ingestion and preprocessing techniques
@@ -134,3 +134,8 @@ The colab notebook.ipynb) walks through:
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Authors
+
+| [<img src="https://github.com/AnalyticAce.png?size=85" width=85><br><sub>DOSSEH Shalom</sub>](https://github.com/AnalyticAce) |
+| :---: |

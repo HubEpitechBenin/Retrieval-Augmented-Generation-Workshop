@@ -8,6 +8,5 @@ faiss-cpu
 openai
 pypdf
 streamlit
-huggingface_hub[hf_xet]
 rich
 tf-keras
