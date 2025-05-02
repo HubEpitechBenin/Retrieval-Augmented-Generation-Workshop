@@ -92,9 +92,9 @@ The project consists of three main components:
 
 3. Create a .env file with your API keys:
    ```
-   HF_TOKEN="your_huggingface_token"
-   DEEPSEEK_API_KEY="your_deepseek_api_key"
-   DEEPSEEK_API_BASE="https://api.deepseek.com/v1"
+   OPENAI_API_KEY=your_openai_api_key
+   OPENAI_API_BASE=https://api.openai.com/v1  # Default OpenAI endpoint
+   MODEL_NAME=gpt-3.5-turbo  # or gpt-4
    ```
 
 ### Running the Application
