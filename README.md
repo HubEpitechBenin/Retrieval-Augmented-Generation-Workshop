@@ -91,11 +91,11 @@ The project consists of three main components:
 
 2. Create and activate a virtual environment:
 
-```bash
-uv venv
-source .venv/bin/activate  # On macOS/Linux
-.venv\Scripts\activate     # On Windows
-```
+   ```bash
+   uv venv
+   source .venv/bin/activate  # On macOS/Linux
+   .venv\Scripts\activate     # On Windows
+   ```
 
 3. Install dependencies:
    ```
