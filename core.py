@@ -2,7 +2,6 @@ from langchain_community.vectorstores import FAISS
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from huggingface_hub import login
 from langchain.chains import RetrievalQA
 from dotenv import load_dotenv
 import os
@@ -11,12 +10,6 @@ import os
 def load_environment_variables():
     """Load and validate environment variables."""
     load_dotenv()
-    
-    os.environ["HF_HUB_DISABLE_IMPLICIT_TOKEN"] = "1" 
-    
-    hf_token = os.getenv("HF_TOKEN")
-    if hf_token is None:
-        raise ValueError("HF_TOKEN is not set in the environment variables.")
     
     openai_api_key = os.getenv("OPENAI_API_KEY")
     if openai_api_key is None:
@@ -34,11 +27,7 @@ def load_environment_variables():
     if model_name not in ["gpt-3.5-turbo", "gpt-4"]:
         raise ValueError("MODEL_NAME must be either 'gpt-3.5-turbo' or 'gpt-4'.")
     
-    return hf_token, openai_api_key, openai_api_base, model_name
-
-def authenticate_huggingface(token):
-    """Login to HuggingFace."""
-    login(token=token, add_to_git_credential=False)
+    return openai_api_key, openai_api_base, model_name
 
 def load_and_split_documents(pdf_path, chunk_size=10000, chunk_overlap=200):
     """Load PDF and split into chunks."""
@@ -87,13 +76,10 @@ def pipeline(filename="data/B-SVR-500_project.pdf", user_query="What is the goal
         hf_token, openai_api_key, openai_api_base, model_name = load_environment_variables()
         embedding_model = "text-embedding-3-small"
         
-        # Step 2: Authenticate with HuggingFace
-        authenticate_huggingface(hf_token)
-        
-        # Step 3: Load and split documents
+        # Step 2: Load and split documents
         chunks = load_and_split_documents(filename)
         
-        # Step 4: Create vector store
+        # Step 3: Create vector store
         try:
             vectorstore = create_vector_store(chunks, embedding_model, openai_api_key)
         except Exception as e:
@@ -101,13 +87,13 @@ def pipeline(filename="data/B-SVR-500_project.pdf", user_query="What is the goal
                 raise ConnectionError(f"Failed to connect to OpenAI API when creating embeddings. Please check your network connection and API key. Error: {e}")
             raise
         
-        # Step 5: Set up the LLM
+        # Step 4: Set up the LLM
         llm = get_openai_llm(model_name, openai_api_key, openai_api_base)
         
-        # Step 6: Create QA chain
+        # Step 5: Create QA chain
         qa_chain = create_qa_chain(llm, vectorstore)
         
-        # Step 7: Ask a question
+        # Step 6: Ask a question
         try:
             response = ask_question(qa_chain, user_query)
             return response["result"]
