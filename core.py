@@ -45,8 +45,13 @@ def create_vector_store(chunks, model_name, api_key=None):
         model=model_name,
         openai_api_key=api_key,
     )
-    vectorstore = FAISS.from_documents(chunks, embeddings)
     
+    if os.path.exists("faiss_index"):
+        vectorstore = FAISS.load_local("faiss_index", embeddings)
+    else:
+        vectorstore = FAISS.from_documents(chunks, embeddings)
+        vectorstore.save_local("faiss_index")
+
     return vectorstore
 
 def get_openai_llm(model_name, api_key, api_base, temperature=1.3, max_tokens=500):
