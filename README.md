@@ -139,3 +139,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 | [<img src="https://github.com/AnalyticAce.png?size=85" width=85><br><sub>DOSSEH Shalom</sub>](https://github.com/AnalyticAce) |
 | :---: |
+
+> 🚀 Don't to put a star 🌟 on `HubEpitechBenin's` repositories and follow the author of this workshop :) .
