@@ -85,16 +85,24 @@ The project consists of three main components:
 
 1. Clone the repository:
    ```
-   git clone https://github.com/AnalyticAce/Retrieval-Augmented-Generation-Workshop.git
+   git clone https://github.com/HubEpitechBenin/Retrieval-Augmented-Generation-Workshop.git
    cd Retrieval-Augmented-Generation-Workshop
    ```
 
-2. Install dependencies:
+2. Create and activate a virtual environment:
+
+```bash
+uv venv
+source .venv/bin/activate  # On macOS/Linux
+.venv\Scripts\activate     # On Windows
+```
+
+3. Install dependencies:
    ```
-   pip install -r requirements.txt
+   uv pip install -r requirements.txt
    ```
 
-3. Create a .env file with your API keys:
+4. Create a .env file with your API keys:
    ```
    OPENAI_API_KEY=your_openai_api_key
    OPENAI_API_BASE=https://api.openai.com/v1  # Default OpenAI endpoint
