@@ -76,7 +76,7 @@ The project consists of three main components:
 
 - Python 3.13+
 - HuggingFace account and API token
-- DeepSeek API key (or compatible LLM API)
+- OpenAI API key (or compatible LLM API)
 
 > [!NOTE]
 > If you need help setting up Python, VS Code, and the uv package manager, please refer to our [Setup Guide](SETUP.md) for detailed instructions.
@@ -130,9 +130,8 @@ streamlit run streamlit_app.py
 ## Technical Details
 
 - **Document Chunking**: Uses RecursiveCharacterTextSplitter with chunk size of 10,000 characters
-- **Embeddings**: Generated using Hugging Face's "all-MiniLM-L6-v2" model
 - **Vector Database**: FAISS for efficient similarity search
-- **LLM**: DeepSeek Chat model (can be configured to use other LLMs)
+- **LLM**: OpenAI Chat model (can be configured to use other LLMs)
 - **Framework**: Built on LangChain for component orchestration
 
 ## Workshop Content

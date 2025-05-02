@@ -3,17 +3,16 @@ import time
 import os
 from core import (
     load_environment_variables,
-    authenticate_huggingface,
     load_and_split_documents,
     create_vector_store,
-    get_deepseek_llm,
+    get_openai_llm,
     create_qa_chain,
     ask_question
 )
 
 st.set_page_config(
     page_title="AI Document Assistant",
-    page_icon="assets/image.png",
+    page_icon="📚",
     layout="centered"
 )
 
@@ -45,12 +44,12 @@ with st.sidebar:
         if st.button("Process Document"):
             with st.spinner("Processing document..."):
                 try:
-                    hf_token, deepseek_api_key, deepseek_api_base = load_environment_variables()
-                    authenticate_huggingface(hf_token)
+                    openai_api_key, openai_api_base, model_name = load_environment_variables()
+                    embedding_model = "text-embedding-3-small"
                     
                     chunks = load_and_split_documents("temp_upload.pdf")
-                    vectorstore = create_vector_store(chunks)
-                    llm = get_deepseek_llm(deepseek_api_key, deepseek_api_base)
+                    vectorstore = create_vector_store(chunks, embedding_model)
+                    llm = get_openai_llm(model_name, openai_api_key, openai_api_base)
                     qa_chain = create_qa_chain(llm, vectorstore)
                     
                     st.session_state.uploaded_file = uploaded_file.name
@@ -61,7 +60,7 @@ with st.sidebar:
                     
                     st.session_state.messages.append({
                         "role": "assistant",
-                        "content": f"I've processed '{uploaded_file.name}'. You can now ask questions about it!"
+                        "content": f"I've processed *{uploaded_file.name}*. You can now ask questions about it!"
                     })
                 except Exception as e:
                     st.error(f"Error processing document: {str(e)}")
@@ -69,12 +68,12 @@ with st.sidebar:
     if st.session_state.uploaded_file:
         st.info(f"Current document: {st.session_state.uploaded_file}")
     
-    st.caption("Powered by LangChain and DeepSeek LLM")
+    st.caption("Powered by LangChain and OpenAI LLM")
 
 st.title("AI Document Assistant")
 
 for message in st.session_state.messages:
-    avatar = "assets/image.png" if message["role"] == "assistant" else "👤"
+    avatar = "🤓" if message["role"] == "assistant" else "😃"
     with st.chat_message(message["role"], avatar=avatar):
         st.write(message["content"])
 
@@ -95,10 +94,10 @@ def pipeline_stream(prompt):
 if prompt := st.chat_input("Ask about the uploaded document..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     
-    with st.chat_message("user", avatar="👤"):
+    with st.chat_message("user", avatar="😃"):
         st.write(prompt)
 
-    with st.chat_message("assistant", avatar="assets/image.png"):
+    with st.chat_message("assistant", avatar="🤓"):
         with st.spinner("Searching knowledge base..."):
             collected_response = [""]
 
