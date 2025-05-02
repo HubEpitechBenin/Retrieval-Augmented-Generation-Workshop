@@ -78,7 +78,7 @@ def pipeline(filename="data/B-SVR-500_project.pdf", user_query="What is the goal
     """Main function to run the entire pipeline."""
     try:
         # Step 1: Load environment variables
-        hf_token, openai_api_key, openai_api_base, model_name = load_environment_variables()
+        openai_api_key, openai_api_base, model_name = load_environment_variables()
         embedding_model = "text-embedding-3-small"
         
         # Step 2: Load and split documents
