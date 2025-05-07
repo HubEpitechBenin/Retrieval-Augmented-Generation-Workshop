@@ -116,10 +116,10 @@ UV is a fast, reliable Python package installer and resolver. Install it using:
 
 ```shell
 # Windows (PowerShell)
-curl -sSf https://install.python-uv.org/install.ps1 | powershell
+curl -sSf https://astral.sh/uv/install.sh | powershell
 
 # macOS and Linux
-curl -sSf https://install.python-uv.org/install.sh | bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 Verify installation:
