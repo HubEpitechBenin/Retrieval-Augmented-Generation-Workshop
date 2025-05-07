@@ -133,7 +133,7 @@ Clone the repository and install dependencies:
 
 ```shell
 # Clone the repository
-git clone https://github.com/yourusername/Retrieval-Augmented-Generation-Workshop.git
+git clone https://github.com/HubEpitechBenin/Retrieval-Augmented-Generation-Workshop.git
 cd Retrieval-Augmented-Generation-Workshop
 
 # Create and activate a virtual environment
