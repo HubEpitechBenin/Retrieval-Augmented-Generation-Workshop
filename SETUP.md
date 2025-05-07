@@ -137,13 +137,13 @@ git clone https://github.com/yourusername/Retrieval-Augmented-Generation-Worksho
 cd Retrieval-Augmented-Generation-Workshop
 
 # Create and activate a virtual environment
-python -m venv venv
+uv venv
 
 # On Windows
-venv\Scripts\activate
+.venv\Scripts\activate
 
 # On macOS/Linux
-source venv/bin/activate
+source .venv/bin/activate
 
 # Install dependencies with UV
 uv pip install -r requirements.txt
